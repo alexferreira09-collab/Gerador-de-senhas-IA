@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    --primary: #10b981;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.title {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.neon-text {
+    text-shadow: 0 0 15px #10b981,
+                0 0 30px #10b981;
+}
+
+.glass {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+}
+
+.password-display {
+    font-family: 'Space Grotesk', monospace;
+    letter-spacing: 4px;
+    font-weight: 700;
+}
+
+.strength-bar {
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.option-label {
+    transition: all 0.2s;
+}
+
+.option-label:hover {
+    transform: translateX(6px);
+}
+
+.glass {
+    transition: all 0.3s ease;
+}

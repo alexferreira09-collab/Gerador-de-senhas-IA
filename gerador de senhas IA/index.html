@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoPass • Gerador Quântico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-zinc-950 text-zinc-200 min-h-screen overflow-x-hidden">
+    <div class="max-w-2xl mx-auto p-6 pt-12">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-12">
+            <div class="flex items-center gap-4">
+                <img src="assets/logo.svg" alt="NeoPass" class="w-12 h-12 drop-shadow-xl">
+                <div>
+                    <h1 class="title text-5xl font-bold tracking-tighter neon-text">NEOPASS</h1>
+                    <p class="text-emerald-400/70 text-sm tracking-[3px] uppercase">Quantum Security</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div onclick="toggleTheme()" class="cursor-pointer w-9 h-9 flex items-center justify-center rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700">
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                </div>
+                <span class="px-4 py-2 text-xs font-mono bg-emerald-950 text-emerald-400 rounded-3xl border border-emerald-500/30">v3.0</span>
+            </div>
+        </div>
+
+        <!-- Password Display -->
+        <div class="glass rounded-3xl p-8 mb-8 border border-emerald-500/30 shadow-2xl">
+            <div class="flex justify-between mb-4">
+                <div class="flex items-center gap-2 text-emerald-400">
+                    <i class="fas fa-shield-alt"></i>
+                    <span class="font-medium">SENHA GERADA</span>
+                </div>
+                <button onclick="copyPassword()" id="copy-btn"
+                        class="flex items-center gap-2 px-5 py-2.5 bg-zinc-900 hover:bg-emerald-950 border border-emerald-500/40 rounded-2xl text-sm font-medium transition-all">
+                    <i class="fas fa-copy"></i> Copiar
+                </button>
+            </div>
+
+            <div id="password" 
+                 class="password-display text-4xl md:text-6xl font-bold text-white bg-zinc-900/80 p-8 rounded-2xl border border-emerald-500/10 min-h-[100px] flex items-center break-all select-all">
+            </div>
+
+            <!-- Entropy -->
+            <div class="mt-4 flex justify-between text-xs text-zinc-500">
+                <span>Entropia:</span>
+                <span id="entropy" class="font-mono text-emerald-400">0 bits</span>
+            </div>
+        </div>
+
+        <!-- Strength -->
+        <div class="mb-8 px-2">
+            <div class="flex justify-between text-xs mb-2">
+                <span class="text-zinc-400">FORÇA DA SENHA</span>
+                <span id="strength-text" class="font-semibold">EXCELENTE</span>
+            </div>
+            <div class="h-3 bg-zinc-800 rounded-3xl overflow-hidden">
+                <div id="strength-bar" class="strength-bar h-full w-full bg-gradient-to-r from-emerald-400 to-cyan-400"></div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="glass rounded-3xl p-8 border border-zinc-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Length -->
+                <div>
+                    <div class="flex justify-between mb-3">
+                        <label class="text-sm font-medium">Comprimento</label>
+                        <span id="length-value" class="font-mono text-2xl font-bold text-emerald-400">20</span>
+                    </div>
+                    <input type="range" id="length" min="8" max="64" value="20"
+                           oninput="updateLength(this.value)" class="w-full accent-emerald-500">
+                </div>
+
+                <!-- Options -->
+                <div>
+                    <p class="text-sm font-medium mb-4">Caracteres</p>
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <label class="option-label flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="uppercase" checked> Maiúsculas
+                        </label>
+                        <label class="option-label flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="lowercase" checked> Minúsculas
+                        </label>
+                        <label class="option-label flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="numbers" checked> Números
+                        </label>
+                        <label class="option-label flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="symbols" checked> Símbolos
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <label class="flex items-center gap-3 cursor-pointer text-sm">
+                    <input type="checkbox" id="avoid-similar" checked>
+                    <span>Evitar caracteres semelhantes (1, l, I, 0, O)</span>
+                </label>
+            </div>
+
+            <!-- Buttons -->
+            <div class="grid grid-cols-2 gap-4 mt-10">
+                <button onclick="generatePassword()" 
+                        class="col-span-2 md:col-span-1 bg-gradient-to-r from-emerald-500 to-cyan-400 hover:brightness-110 text-black font-bold py-6 rounded-3xl text-lg flex items-center justify-center gap-3 transition-all active:scale-95">
+                    <i class="fas fa-bolt"></i>
+                    GERAR SENHA
+                </button>
+                
+                <button onclick="generateMultiple()" 
+                        class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 font-medium py-6 rounded-3xl text-lg transition-all">
+                    Gerar 5 Senhas
+                </button>
+            </div>
+        </div>
+
+        <!-- History -->
+        <div class="mt-12">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="flex items-center gap-2 text-zinc-400 font-medium">
+                    <i class="fas fa-history"></i> Histórico
+                </h3>
+                <button onclick="clearHistory()" class="text-red-400 hover:text-red-500 text-sm flex items-center gap-1">
+                    <i class="fas fa-trash"></i> Limpar
+                </button>
+            </div>
+            <div id="history" class="space-y-3"></div>
+        </div>
+
+        <footer class="text-center text-zinc-600 text-xs mt-16">
+            Senhas geradas localmente • Nunca armazenadas
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
